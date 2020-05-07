@@ -91,14 +91,14 @@ int main(int argc, const char** argv)
 	else
 		printf("The size of the file %s is %ld.\n", inFileName,	 fileStat.st_size);
 	// устанавливаем соответствующий размер файла для записи
-	if (fseek(outFile, fileStat.st_size, SEEK_SET) != 0)
+	if (fseek(outFile, fileStat.st_size - 1, SEEK_SET) != 0)
 	{
 		printf("Could not size the output file.\n");
 		fclose(inFile);
 		fclose(outFile);
 		return -1;
 	}
-	fwrite(" ", 1, 1, outFile);
+	//fwrite("", 1, 1, outFile);
 
 	// отображение файлов в память
 	char* source, * destin;
@@ -129,7 +129,7 @@ int main(int argc, const char** argv)
 			count++;
 	}
 	// массив строк представления
-	String* lines = (String*)malloc((count + 1) * sizeof(String));
+	String* lines = (String*)malloc(count * sizeof(String));
 	lines[0].Line = &(source[0]);
 	count = 0;
 	size_t length = 0;
@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
 	}
 	lines[count].Length = length + 1;
 
-	qsort(lines, count + 1, sizeof(String), StringCompare);
+	qsort(lines, count, sizeof(String), StringCompare);
 	
 	length = 0;
 	for (size_t index = 0; index < count + 1; ++index) 
@@ -157,7 +157,6 @@ int main(int argc, const char** argv)
 		length += lines[index].Length;
 	}
 
-	//for (unsigned int index = 0; source)
 
 	free(lines);
 	fclose(inFile);
